@@ -7,7 +7,8 @@ import { HashHelper } from 'src/helper/module.helper';
 import { JwtStrategy } from './strategy/jtw.strategy';
 import { LocalStrategy } from './strategy/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constant/jwt.constant';
+import { jwtConstants } from './constant';
+import { UsersService } from 'src/users/users.service';
 
 @Module({
   imports: [
@@ -20,6 +21,12 @@ import { jwtConstants } from './constant/jwt.constant';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, HashHelper, JwtStrategy, LocalStrategy],
+  providers: [
+    AuthService,
+    HashHelper,
+    JwtStrategy,
+    LocalStrategy,
+    UsersService,
+  ],
 })
 export class AuthModule {}

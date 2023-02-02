@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { HashHelper } from 'src/helper/module.helper';
 import { User, UserDocument } from './schemas/users.schemas';
@@ -12,9 +12,19 @@ export class UsersService {
     private hashService: HashHelper,
   ) {}
 
+  async validateUsername(username: string) {
+    return this.UserModel.findOne({ username }).exec();
+  }
+
   async register(createUserDto: CreateUserDto) {
     //validate DTO
     const registUser = new this.UserModel(createUserDto);
+
+    //checking username
+    const user = await this.validateUsername(createUserDto.username);
+    if (user) {
+      throw new BadRequestException();
+    }
 
     //hash password
     registUser.password = await this.hashService.hashPassword(
